@@ -11,6 +11,7 @@ const navLinks = [
   { href: '/decks', label: 'デッキ一覧' },
   { href: '/meta', label: '環境/Tier' },
   { href: '/articles', label: '攻略記事' },
+  { href: '/generator', label: 'AI生成' },
 ];
 
 export default function Navbar() {
