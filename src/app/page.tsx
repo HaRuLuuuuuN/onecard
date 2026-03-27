@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Layers, BarChart2, BookOpen, TrendingUp, Zap, Shield } from 'lucide-react';
-import { articles, tierList } from '@/data/meta';
+import { articles, defaultTierData } from '@/data/meta';
 import { sampleDecks } from '@/data/decks';
 
 const featureCards = [
@@ -32,12 +32,12 @@ const featureCards = [
 
 const stats = [
   { label: 'サンプルデッキ', value: String(sampleDecks.length), icon: Layers },
-  { label: 'Tierリスト収録', value: String(tierList.length), icon: TrendingUp },
+  { label: 'Tier収録リーダー', value: String(defaultTierData.entries.length), icon: TrendingUp },
   { label: '攻略記事', value: String(articles.length), icon: BookOpen },
 ];
 
 export default function HomePage() {
-  const topTier = tierList.filter((t) => t.tier === 'S');
+  const topTier = defaultTierData.entries.filter((e) => e.tier === 'S');
   const latestArticles = articles.slice(0, 3);
 
   return (
@@ -48,7 +48,7 @@ export default function HomePage() {
         <div className="relative">
           <div className="inline-flex items-center gap-2 bg-yellow-600/20 border border-yellow-600/40 rounded-full px-4 py-1.5 text-yellow-400 text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
-            OP02 PARAMOUNT WAR 対応
+            OP-15 神の島の冒険 対応
           </div>
           <h1 className="text-4xl sm:text-6xl font-black text-white mb-4 leading-tight">
             ONE PIECE カードゲーム
@@ -120,55 +120,18 @@ export default function HomePage() {
             全て見る →
           </Link>
         </div>
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="flex flex-wrap gap-3">
           {topTier.map((entry) => (
-            <div
-              key={entry.leaderId}
-              className="bg-gray-900 border border-yellow-600/30 rounded-xl p-5 flex items-start gap-4"
-            >
-              <div className="bg-yellow-600/20 border border-yellow-600/50 rounded-lg px-3 py-2 text-yellow-400 font-black text-2xl min-w-[60px] text-center">
-                S
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  {entry.color.map((c) => (
-                    <span
-                      key={c}
-                      className="text-xs px-2 py-0.5 rounded font-bold text-white"
-                      style={{
-                        backgroundColor:
-                          c === 'Red'
-                            ? '#dc2626'
-                            : c === 'Blue'
-                            ? '#2563eb'
-                            : c === 'Purple'
-                            ? '#9333ea'
-                            : '#374151',
-                      }}
-                    >
-                      {c}
-                    </span>
-                  ))}
-                  <span
-                    className={`text-xs font-bold ${
-                      entry.trend === 'up'
-                        ? 'text-green-400'
-                        : entry.trend === 'down'
-                        ? 'text-red-400'
-                        : 'text-gray-400'
-                    }`}
-                  >
-                    {entry.trend === 'up' ? '↑' : entry.trend === 'down' ? '↓' : '→'}
-                  </span>
+            <Link key={entry.id} href="/meta">
+              <div className="bg-gray-900 border border-yellow-600/30 hover:border-yellow-500/60 rounded-xl px-4 py-3 flex items-center gap-3 transition-colors">
+                <div className="bg-yellow-600/20 border border-yellow-600/50 rounded-lg px-2 py-1 text-yellow-400 font-black text-lg">
+                  S
                 </div>
-                <p className="font-bold text-white">{entry.leaderNameJa}</p>
-                <p className="text-gray-400 text-sm mt-1 line-clamp-2">{entry.description}</p>
-                <div className="flex gap-4 mt-2 text-xs text-gray-500">
-                  <span>勝率: <span className="text-green-400 font-bold">{entry.winRate}%</span></span>
-                  <span>使用率: <span className="text-blue-400 font-bold">{entry.popularity}%</span></span>
-                </div>
+                <span className="text-white font-bold text-sm">{entry.name}</span>
+                {entry.trend === 'up' && <span className="text-blue-400 font-bold">↑</span>}
+                {entry.trend === 'down' && <span className="text-red-400 font-bold">↓</span>}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>

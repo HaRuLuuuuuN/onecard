@@ -1,77 +1,64 @@
+export type TierLevel = 'S' | 'A+' | 'A' | 'B+';
+export type CardColorJa = '赤' | '青' | '緑' | '黄' | '紫' | '黒';
+
 export interface TierEntry {
-  leaderId: string;
-  leaderName: string;
-  leaderNameJa: string;
-  color: string[];
-  tier: 'S' | 'A' | 'B' | 'C';
-  winRate: number;
-  popularity: number;
+  id: string;
+  name: string;
+  colors: CardColorJa[];
+  tier: TierLevel;
   trend: 'up' | 'down' | 'stable';
-  description: string;
+  imageUrl?: string;
 }
 
-export const tierList: TierEntry[] = [
-  {
-    leaderId: 'OP01-001',
-    leaderName: 'Monkey D. Luffy',
-    leaderNameJa: 'モンキー・D・ルフィ (OP01)',
-    color: ['Red'],
-    tier: 'S',
-    winRate: 58.2,
-    popularity: 24.5,
-    trend: 'stable',
-    description:
-      'コスト5以下への速攻付与が強力。序盤から一気にライフを削れる攻撃的なリーダー。環境最強格として長期間君臨。',
-  },
-  {
-    leaderId: 'OP02-001',
-    leaderName: 'Edward Newgate',
-    leaderNameJa: 'エドワード・ニューゲート (OP02)',
-    color: ['Purple'],
-    tier: 'S',
-    winRate: 56.8,
-    popularity: 18.2,
-    trend: 'up',
-    description:
-      'DON!!を戻してキャラを展開するリーダー。高コストキャラを素早く展開でき、圧倒的なボードアドバンテージを獲得。',
-  },
-  {
-    leaderId: 'OP01-060',
-    leaderName: 'Trafalgar Law',
-    leaderNameJa: 'トラファルガー・ロー (OP01)',
-    color: ['Blue'],
-    tier: 'A',
-    winRate: 53.1,
-    popularity: 15.8,
-    trend: 'stable',
-    description:
-      'バウンス効果で相手の展開を阻害するコントロールリーダー。テクニカルで上位者に人気。',
-  },
-  {
-    leaderId: 'OP01-091',
-    leaderName: 'Charlotte Katakuri',
-    leaderNameJa: 'シャーロット・カタクリ (OP01)',
-    color: ['Black'],
-    tier: 'A',
-    winRate: 52.4,
-    popularity: 12.3,
-    trend: 'down',
-    description:
-      'デッキトップを操作してDON!!を回収できるリーダー。安定性が高く、長期戦に強い。',
-  },
-  {
-    leaderId: 'OP02-049',
-    leaderName: 'Monkey D. Garp',
-    leaderNameJa: 'モンキー・D・ガープ (OP02)',
-    color: ['Blue'],
-    tier: 'B',
-    winRate: 49.7,
-    popularity: 9.1,
-    trend: 'up',
-    description:
-      '海軍タイプへのパワーバフが強力。海軍カードが増えるにつれて評価が上昇中。',
-  },
-];
+export interface TierData {
+  edition: string;
+  editionName: string;
+  updatedAt: string;
+  entries: TierEntry[];
+}
+
+export const defaultTierData: TierData = {
+  edition: 'OP-15',
+  editionName: '神の島の冒険',
+  updatedAt: '2026/3/3',
+  entries: [
+    // S (Tier1)
+    { id: 's-1', name: '青黄ハンコック', colors: ['青', '黄'], tier: 'S', trend: 'stable' },
+    { id: 's-2', name: '赤青ルーシー', colors: ['赤', '青'], tier: 'S', trend: 'up' },
+    { id: 's-3', name: '紫エネル', colors: ['紫'], tier: 'S', trend: 'up' },
+    // A+ (Tier1.5)
+    { id: 'ap-1', name: '赤青エース', colors: ['赤', '青'], tier: 'A+', trend: 'stable' },
+    { id: 'ap-2', name: '黒イム', colors: ['黒'], tier: 'A+', trend: 'stable' },
+    { id: 'ap-3', name: '紫ドフラ', colors: ['紫'], tier: 'A+', trend: 'up' },
+    { id: 'ap-4', name: '緑ミホーク', colors: ['緑'], tier: 'A+', trend: 'stable' },
+    { id: 'ap-5', name: '赤黒サボ', colors: ['赤', '黒'], tier: 'A+', trend: 'stable' },
+    { id: 'ap-6', name: '紫黄ロシナンテ', colors: ['紫', '黄'], tier: 'A+', trend: 'stable' },
+    { id: 'ap-7', name: '赤黒コビー', colors: ['赤', '黒'], tier: 'A+', trend: 'up' },
+    { id: 'ap-8', name: '緑黒ブルック', colors: ['緑', '黒'], tier: 'A+', trend: 'up' },
+    // A (Tier2)
+    { id: 'a-1', name: '青黄ナミ', colors: ['青', '黄'], tier: 'A', trend: 'stable' },
+    { id: 'a-2', name: '青紫ルフィ', colors: ['青', '紫'], tier: 'A', trend: 'down' },
+    { id: 'a-3', name: '黒クロコダイル', colors: ['黒'], tier: 'A', trend: 'stable' },
+    { id: 'a-4', name: '青紫サンジ', colors: ['青', '紫'], tier: 'A', trend: 'down' },
+    { id: 'a-5', name: '緑ゾロ', colors: ['緑'], tier: 'A', trend: 'stable' },
+    { id: 'a-6', name: '赤青ビビ', colors: ['赤', '青'], tier: 'A', trend: 'up' },
+    { id: 'a-7', name: '赤黄ボニー', colors: ['赤', '黄'], tier: 'A', trend: 'stable' },
+    { id: 'a-8', name: '緑黄しらほし', colors: ['緑', '黄'], tier: 'A', trend: 'stable' },
+    { id: 'a-9', name: '空島ルフィ', colors: ['赤'], tier: 'A', trend: 'up' },
+    { id: 'a-10', name: '黄カルガラ', colors: ['黄'], tier: 'A', trend: 'up' },
+    // B+ (Tier2.5)
+    { id: 'bp-1', name: '青クザン', colors: ['青'], tier: 'B+', trend: 'down' },
+    { id: 'bp-2', name: '青ジンベエ', colors: ['青'], tier: 'B+', trend: 'stable' },
+    { id: 'bp-3', name: '緑ボニー', colors: ['緑'], tier: 'B+', trend: 'stable' },
+    { id: 'bp-4', name: '赤緑スモーカー', colors: ['赤', '緑'], tier: 'B+', trend: 'stable' },
+    { id: 'bp-5', name: 'エグヘルフィ', colors: ['赤'], tier: 'B+', trend: 'stable' },
+    { id: 'bp-6', name: '赤緑ルフィ', colors: ['赤', '緑'], tier: 'B+', trend: 'up' },
+    { id: 'bp-7', name: '赤緑クリーク', colors: ['赤', '緑'], tier: 'B+', trend: 'up' },
+    { id: 'bp-8', name: '黒黄モリア', colors: ['黒', '黄'], tier: 'B+', trend: 'up' },
+    { id: 'bp-9', name: '黒ルッチ', colors: ['黒'], tier: 'B+', trend: 'stable' },
+    { id: 'bp-10', name: '紫黒ルフィ', colors: ['紫', '黒'], tier: 'B+', trend: 'up' },
+  ],
+};
 
 export interface Article {
   id: string;
@@ -157,32 +144,31 @@ DON!!カードはゲームのリソースシステムです。カードを出し
   },
   {
     id: 'art-003',
-    title: '最新環境分析：OP02参入後のTierリスト',
+    title: '最新環境分析：OP15参入後のTierリスト',
     category: 'meta',
     categoryLabel: 'メタ分析',
     summary:
-      'PARAMOUNT WAR (OP02) 発売後の環境変化を分析。新たなTierリストと各デッキの立ち位置を解説。',
+      '神の島の冒険 (OP15) 発売後の環境変化を分析。新たなTierリストと各デッキの立ち位置を解説。',
     content: `## 環境概況
 
-OP02「頂上決戦」の発売により、紫色のカードが大幅に強化されました。
-特に白ひげリーダーは圧倒的な展開力で環境トップに躍り出ています。
+OP15「神の島の冒険」の発売により、青黄・赤青カラーが大幅に強化されました。
+特に青黄ハンコックと赤青ルーシーが環境トップに君臨しています。
 
 ## Tier S
 
-### 赤ルフィ
-変わらぬ速攻力で環境最上位をキープ。
+### 青黄ハンコック
+圧倒的なコントロール性能でTier1に。
 
-### 紫白ひげ
-OP02の新リーダー。DON!!を戻すことで高コストキャラを素早く展開できる。
+### 赤青ルーシー
+速攻力とコントロールを兼ね備えた万能デッキ。
 
 ## 環境の注目ポイント
 
-OP02環境では「ドン!!戻し」効果が強力なメカニズムとして確立されました。
-これに対抗するため、青系のバウンスデッキが再評価されています。`,
+OP15環境では多色デッキが台頭。単色デッキは苦戦を強いられる場面が増えています。`,
     author: 'MetaWatcher',
-    publishedAt: '2024-12-15',
+    publishedAt: '2026-03-05',
     readTime: 10,
-    tags: ['メタ', 'OP02', 'Tierリスト'],
+    tags: ['メタ', 'OP15', 'Tierリスト'],
   },
   {
     id: 'art-004',
