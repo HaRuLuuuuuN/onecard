@@ -4,17 +4,30 @@ import { useEffect, useState } from 'react';
 
 export type DeckColor = '赤' | '青' | '緑' | '黄' | '紫' | '黒';
 
+export interface DeckCardEntry {
+  id: string;
+  cardName: string;
+  cardId?: string;
+  imageUrl?: string;
+  cost?: number;
+  power?: number;
+  type: 'キャラクター' | 'イベント' | 'ステージ';
+  count: number;
+}
+
 export interface ManagedDeck {
   id: string;
   name: string;
   leaderName: string;
+  leaderImageUrl?: string;
+  bannerImageUrl?: string;
   colors: DeckColor[];
   description: string;
   author: string;
   createdAt: string;
   tags: string[];
   likes: number;
-  cardCount: number;
+  cards: DeckCardEntry[];
 }
 
 const defaultDecks: ManagedDeck[] = [
@@ -28,7 +41,7 @@ const defaultDecks: ManagedDeck[] = [
     createdAt: '2024-12-01',
     tags: ['速攻', '赤', '初心者向け', '環境デッキ'],
     likes: 342,
-    cardCount: 50,
+    cards: [],
   },
   {
     id: 'deck-002',
@@ -40,7 +53,7 @@ const defaultDecks: ManagedDeck[] = [
     createdAt: '2024-12-05',
     tags: ['コントロール', '青', '上級者向け'],
     likes: 218,
-    cardCount: 50,
+    cards: [],
   },
   {
     id: 'deck-003',
@@ -52,11 +65,11 @@ const defaultDecks: ManagedDeck[] = [
     createdAt: '2024-12-10',
     tags: ['アグロ', '紫', '中級者向け', '環境デッキ'],
     likes: 189,
-    cardCount: 50,
+    cards: [],
   },
 ];
 
-const STORAGE_KEY = 'onecard-decks-v1';
+const STORAGE_KEY = 'onecard-decks-v2';
 
 export function useDecksStore() {
   const [decks, setDecks] = useState<ManagedDeck[]>(defaultDecks);

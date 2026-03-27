@@ -1,15 +1,16 @@
 'use client';
 
+import Link from 'next/link';
 import { Heart, Clock, Tag } from 'lucide-react';
 import { useDecksStore } from '@/lib/decksStore';
 
-const COLOR_DOT: Record<string, string> = {
-  赤: '#dc2626',
-  青: '#2563eb',
-  緑: '#16a34a',
-  黄: '#ca8a04',
-  紫: '#9333ea',
-  黒: '#374151',
+const COLOR_BG: Record<string, string> = {
+  赤: '#7f1d1d',
+  青: '#1e3a8a',
+  緑: '#14532d',
+  黄: '#78350f',
+  紫: '#581c87',
+  黒: '#111827',
 };
 
 export default function DecksPage() {
@@ -31,74 +32,72 @@ export default function DecksPage() {
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {decks.map((deck) => (
-          <div
-            key={deck.id}
-            className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 hover:bg-gray-800/50 transition-all"
-          >
-            {/* Leader banner */}
-            <div className="bg-gradient-to-r from-gray-800 to-gray-900 border-b border-gray-800 p-4 flex items-start gap-3">
-              <div
-                className="rounded-lg w-16 h-20 flex items-center justify-center flex-shrink-0"
-                style={{ backgroundColor: COLOR_DOT[deck.colors[0]] ?? '#374151' }}
-              >
-                <span className="text-white/60 text-lg font-black">
-                  {deck.colors[0]}
-                </span>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1 mb-1">
-                  {deck.colors.map((c) => (
-                    <span
-                      key={c}
-                      className="inline-block w-3 h-3 rounded-full border border-white/20"
-                      style={{ backgroundColor: COLOR_DOT[c] ?? '#374151' }}
-                    />
-                  ))}
-                  <span className="text-gray-500 text-xs ml-1">リーダー</span>
+        {decks.map((deck) => {
+          const totalCards = deck.cards.reduce((s, c) => s + c.count, 0);
+          return (
+            <Link key={deck.id} href={`/decks/${deck.id}`}>
+              <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 hover:shadow-lg hover:shadow-black/50 transition-all h-full flex flex-col">
+                {/* Banner */}
+                <div
+                  className="h-32 relative overflow-hidden flex-shrink-0"
+                  style={{
+                    background: deck.bannerImageUrl
+                      ? undefined
+                      : `linear-gradient(135deg, ${COLOR_BG[deck.colors[0]] ?? '#111827'} 0%, #1f2937 100%)`,
+                  }}
+                >
+                  {deck.bannerImageUrl && (
+                    <img src={deck.bannerImageUrl} alt={deck.name} className="w-full h-full object-cover" />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
+                  {/* Leader image bottom-left */}
+                  <div className="absolute bottom-2 left-3 flex items-end gap-2">
+                    {deck.leaderImageUrl ? (
+                      <img
+                        src={deck.leaderImageUrl}
+                        alt={deck.leaderName}
+                        className="w-12 h-16 object-cover rounded border border-white/20 shadow"
+                      />
+                    ) : (
+                      <div
+                        className="w-12 h-16 rounded border border-white/20 flex items-center justify-center text-xs font-bold text-white/40"
+                        style={{ backgroundColor: COLOR_BG[deck.colors[0]] ?? '#374151' }}
+                      >
+                        {deck.colors[0]}
+                      </div>
+                    )}
+                    <div className="pb-0.5">
+                      <p className="text-white text-xs font-bold drop-shadow">{deck.leaderName}</p>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-white font-bold text-sm">{deck.leaderName}</p>
-              </div>
-            </div>
 
-            <div className="p-4 space-y-3">
-              <h3 className="text-white font-bold">{deck.name}</h3>
-              <p className="text-gray-400 text-sm line-clamp-2">{deck.description}</p>
+                <div className="p-4 space-y-2 flex-1 flex flex-col">
+                  <h3 className="text-white font-bold">{deck.name}</h3>
+                  <p className="text-gray-400 text-sm line-clamp-2 flex-1">{deck.description}</p>
 
-              <div className="flex flex-wrap gap-1.5">
-                {deck.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="flex items-center gap-1 text-xs bg-gray-800 text-gray-400 px-2 py-1 rounded"
-                  >
-                    <Tag className="w-3 h-3" />
-                    {tag}
-                  </span>
-                ))}
-              </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {deck.tags.slice(0, 3).map((tag) => (
+                      <span key={tag} className="flex items-center gap-1 text-xs bg-gray-800 text-gray-400 px-2 py-0.5 rounded">
+                        <Tag className="w-2.5 h-2.5" />{tag}
+                      </span>
+                    ))}
+                  </div>
 
-              <div className="bg-gray-800 rounded-lg p-3">
-                <p className="text-gray-400 text-xs mb-1">デッキ枚数</p>
-                <span className="text-yellow-400 font-bold">{deck.cardCount}</span>
-                <span className="text-gray-400 text-sm">/50枚</span>
-              </div>
-
-              <div className="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-gray-800">
-                <span>{deck.author}</span>
-                <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-3 h-3" />
-                    {deck.createdAt}
-                  </span>
-                  <span className="flex items-center gap-1 text-red-400">
-                    <Heart className="w-3 h-3" />
-                    {deck.likes}
-                  </span>
+                  <div className="flex items-center justify-between text-xs text-gray-500 pt-2 border-t border-gray-800">
+                    <span>{deck.author}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-yellow-400 font-bold">{totalCards}/50枚</span>
+                      <span className="flex items-center gap-1 text-red-400">
+                        <Heart className="w-3 h-3" />{deck.likes}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        ))}
+            </Link>
+          );
+        })}
       </div>
 
       {decks.length === 0 && (
