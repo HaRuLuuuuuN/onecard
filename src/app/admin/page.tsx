@@ -482,102 +482,6 @@ function CardEntryForm({ initial, onSave, onCancel }: {
   );
 }
 
-const JSON_TEMPLATE = `[
-  { "cardName": "ゾロ", "cardId": "OP01-025", "cost": 3, "power": 5000, "type": "キャラクター", "count": 4, "imageUrl": "" },
-  { "cardName": "サンジ", "cardId": "OP01-033", "cost": 4, "power": 6000, "type": "キャラクター", "count": 4 },
-  { "cardName": "火拳", "cardId": "OP01-050", "cost": 2, "type": "イベント", "count": 3 }
-]`;
-
-function parseImportJson(raw: string): DeckCardEntry[] | null {
-  try {
-    const arr = JSON.parse(raw);
-    if (!Array.isArray(arr)) return null;
-    return arr
-      .filter((item) => typeof item.cardName === 'string' && item.cardName.trim())
-      .map((item, i) => ({
-        id: `import-${Date.now()}-${i}`,
-        cardName: String(item.cardName).trim(),
-        cardId: item.cardId ? String(item.cardId) : undefined,
-        imageUrl: item.imageUrl ? String(item.imageUrl) : undefined,
-        cost: item.cost !== undefined ? Number(item.cost) : undefined,
-        power: item.power !== undefined ? Number(item.power) : undefined,
-        type: (['キャラクター', 'イベント', 'ステージ'] as const).includes(item.type)
-          ? item.type
-          : 'キャラクター',
-        count: Math.min(4, Math.max(1, Number(item.count) || 1)),
-      }));
-  } catch {
-    return null;
-  }
-}
-
-function JsonImportPanel({ onImport }: { onImport: (cards: DeckCardEntry[]) => void }) {
-  const [open, setOpen] = useState(false);
-  const [text, setText] = useState('');
-  const [error, setError] = useState('');
-
-  const handleImport = () => {
-    const parsed = parseImportJson(text);
-    if (!parsed) {
-      setError('JSONの形式が正しくありません。テンプレートを参考にしてください。');
-      return;
-    }
-    if (parsed.length === 0) {
-      setError('カードが見つかりませんでした。');
-      return;
-    }
-    onImport(parsed);
-    setText('');
-    setError('');
-    setOpen(false);
-  };
-
-  if (!open) {
-    return (
-      <button type="button" onClick={() => setOpen(true)}
-        className="flex items-center gap-1 text-blue-400 hover:text-blue-300 text-xs transition-colors">
-        <Plus className="w-3 h-3" />JSON一括インポート
-      </button>
-    );
-  }
-
-  return (
-    <div className="bg-gray-950 border border-blue-800/50 rounded-xl p-3 space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="text-blue-400 text-xs font-bold">JSON一括インポート</p>
-        <button type="button" onClick={() => { setOpen(false); setError(''); setText(''); }}
-          className="text-gray-500 hover:text-gray-300 transition-colors">
-          <X className="w-3.5 h-3.5" />
-        </button>
-      </div>
-      <p className="text-gray-500 text-[11px]">
-        下記フォーマットのJSONを貼り付けてください。<code className="text-gray-400">imageUrl</code>は省略可。既存カードに追記されます。
-      </p>
-      <div className="bg-gray-900 rounded-lg p-2 text-[10px] text-gray-400 font-mono overflow-x-auto whitespace-pre select-all cursor-text border border-gray-700">
-        {JSON_TEMPLATE}
-      </div>
-      <textarea
-        value={text}
-        onChange={(e) => { setText(e.target.value); setError(''); }}
-        rows={6}
-        placeholder="ここにJSONを貼り付け..."
-        className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-xs font-mono focus:border-blue-500 outline-none resize-y"
-      />
-      {error && <p className="text-red-400 text-xs">{error}</p>}
-      <div className="flex gap-2">
-        <button type="button" onClick={handleImport} disabled={!text.trim()}
-          className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-500 text-white font-bold px-4 py-2 rounded-lg text-xs transition-colors">
-          <Save className="w-3.5 h-3.5" />インポート
-        </button>
-        <button type="button" onClick={() => { setText(JSON_TEMPLATE); setError(''); }}
-          className="text-gray-400 hover:text-gray-300 text-xs px-3 py-2 rounded-lg border border-gray-700 transition-colors">
-          テンプレートを入力
-        </button>
-      </div>
-    </div>
-  );
-}
-
 function CardListEditor({ cards, onChange }: { cards: DeckCardEntry[]; onChange: (c: DeckCardEntry[]) => void }) {
   const [showAdd, setShowAdd] = useState(false);
   const [editingCardId, setEditingCardId] = useState<string | null>(null);
@@ -593,27 +497,20 @@ function CardListEditor({ cards, onChange }: { cards: DeckCardEntry[]; onChange:
   };
   const deleteCard = (id: string) => onChange(cards.filter((c) => c.id !== id));
 
-  const handleJsonImport = (imported: DeckCardEntry[]) => {
-    onChange([...cards, ...imported]);
-  };
-
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between flex-wrap gap-2">
+      <div className="flex items-center justify-between">
         <label className="text-gray-400 text-xs font-medium">
           デッキ内カード
           <span className={`ml-2 font-bold ${total > 50 ? 'text-red-400' : 'text-yellow-400'}`}>{total}/50枚</span>
           <span className="text-gray-600 ml-1">({cards.length}種)</span>
         </label>
-        <div className="flex gap-3">
-          <JsonImportPanel onImport={handleJsonImport} />
-          {!showAdd && (
-            <button type="button" onClick={() => setShowAdd(true)}
-              className="flex items-center gap-1 text-yellow-400 hover:text-yellow-300 text-xs transition-colors">
-              <Plus className="w-3 h-3" />1枚ずつ追加
-            </button>
-          )}
-        </div>
+        {!showAdd && (
+          <button type="button" onClick={() => setShowAdd(true)}
+            className="flex items-center gap-1 text-yellow-400 hover:text-yellow-300 text-xs transition-colors">
+            <Plus className="w-3 h-3" />カードを追加
+          </button>
+        )}
       </div>
 
       {showAdd && (
