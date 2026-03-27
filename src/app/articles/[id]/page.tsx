@@ -1,14 +1,13 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { use } from 'react';
+import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Clock, Tag, BookOpen } from 'lucide-react';
-import { articles } from '@/data/meta';
+import { useArticlesStore } from '@/lib/articlesStore';
 
 interface Props {
   params: Promise<{ id: string }>;
-}
-
-export function generateStaticParams() {
-  return articles.map((a) => ({ id: a.id }));
 }
 
 const categoryColors: Record<string, string> = {
@@ -42,12 +41,6 @@ function renderContent(content: string) {
           {line.slice(2)}
         </li>
       );
-    } else if (line.startsWith('**') && line.endsWith('**')) {
-      result.push(
-        <p key={key++} className="text-white font-bold mb-2">
-          {line.slice(2, -2)}
-        </p>
-      );
     } else if (line.trim() === '') {
       result.push(<div key={key++} className="mb-2" />);
     } else {
@@ -61,8 +54,18 @@ function renderContent(content: string) {
   return result;
 }
 
-export default async function ArticleDetailPage({ params }: Props) {
-  const { id } = await params;
+export default function ArticleDetailPage({ params }: Props) {
+  const { id } = use(params);
+  const { articles, loaded } = useArticlesStore();
+
+  if (!loaded) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <div className="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   const article = articles.find((a) => a.id === id);
   if (!article) notFound();
 
@@ -70,8 +73,7 @@ export default async function ArticleDetailPage({ params }: Props) {
     .filter(
       (a) =>
         a.id !== article.id &&
-        (a.category === article.category ||
-          a.tags.some((t) => article.tags.includes(t)))
+        (a.category === article.category || a.tags.some((t) => article.tags.includes(t)))
     )
     .slice(0, 3);
 
@@ -107,15 +109,12 @@ export default async function ArticleDetailPage({ params }: Props) {
           </span>
         </div>
 
-        {/* Summary */}
         <div className="bg-yellow-900/20 border border-yellow-600/30 rounded-xl p-4 my-6">
           <p className="text-yellow-300 font-medium text-sm">{article.summary}</p>
         </div>
 
-        {/* Content */}
         <div className="prose-custom">{renderContent(article.content)}</div>
 
-        {/* Tags */}
         <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-gray-800">
           {article.tags.map((tag) => (
             <span
@@ -129,7 +128,6 @@ export default async function ArticleDetailPage({ params }: Props) {
         </div>
       </article>
 
-      {/* Related articles */}
       {relatedArticles.length > 0 && (
         <div>
           <h2 className="text-xl font-black text-white mb-4 flex items-center gap-2">

@@ -1,6 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { BookOpen, Clock, Tag } from 'lucide-react';
-import { articles } from '@/data/meta';
+import { useArticlesStore } from '@/lib/articlesStore';
 
 const categoryColors: Record<string, string> = {
   beginner: 'bg-green-600/20 text-green-400 border-green-600/30',
@@ -10,6 +12,16 @@ const categoryColors: Record<string, string> = {
 };
 
 export default function ArticlesPage() {
+  const { articles, loaded } = useArticlesStore();
+
+  if (!loaded) {
+    return (
+      <div className="flex items-center justify-center py-32">
+        <div className="w-8 h-8 border-2 border-yellow-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -20,25 +32,6 @@ export default function ArticlesPage() {
         <p className="text-gray-400 mt-1">プレイング解説・デッキガイド・環境分析</p>
       </div>
 
-      {/* Category filter tabs (visual only) */}
-      <div className="flex flex-wrap gap-2">
-        {['すべて', '初心者向け', 'デッキガイド', 'メタ分析', '戦略・テクニック'].map(
-          (label) => (
-            <button
-              key={label}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors ${
-                label === 'すべて'
-                  ? 'bg-yellow-600/20 border-yellow-600/50 text-yellow-400'
-                  : 'bg-gray-900 border-gray-700 text-gray-400 hover:border-gray-600'
-              }`}
-            >
-              {label}
-            </button>
-          )
-        )}
-      </div>
-
-      {/* Article grid */}
       <div className="grid md:grid-cols-2 gap-5">
         {articles.map((article) => (
           <Link key={article.id} href={`/articles/${article.id}`}>
@@ -46,8 +39,7 @@ export default function ArticlesPage() {
               <div className="flex items-center gap-2 mb-3">
                 <span
                   className={`text-xs px-2.5 py-1 rounded-full border font-medium ${
-                    categoryColors[article.category] ??
-                    'bg-gray-700/30 text-gray-400 border-gray-600/30'
+                    categoryColors[article.category] ?? 'bg-gray-700/30 text-gray-400 border-gray-600/30'
                   }`}
                 >
                   {article.categoryLabel}
@@ -55,8 +47,6 @@ export default function ArticlesPage() {
               </div>
               <h2 className="text-white font-bold text-lg leading-snug mb-2">{article.title}</h2>
               <p className="text-gray-400 text-sm flex-1 line-clamp-3">{article.summary}</p>
-
-              {/* Tags */}
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {article.tags.slice(0, 4).map((tag) => (
                   <span
@@ -68,8 +58,6 @@ export default function ArticlesPage() {
                   </span>
                 ))}
               </div>
-
-              {/* Footer */}
               <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-800 text-xs text-gray-500">
                 <span className="font-medium">{article.author}</span>
                 <div className="flex items-center gap-3">
@@ -84,6 +72,10 @@ export default function ArticlesPage() {
           </Link>
         ))}
       </div>
+
+      {articles.length === 0 && (
+        <div className="text-center py-16 text-gray-500">記事がありません</div>
+      )}
     </div>
   );
 }
