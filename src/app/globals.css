@@ -44,3 +44,112 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ── Rich Editor (Tiptap / note-like) ───────────────────────── */
+.note-editor .tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #4b5563;
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+.note-editor .tiptap { outline: none; }
+
+.note-editor .tiptap h1 {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #f9fafb;
+  margin: 1.5rem 0 0.75rem;
+  line-height: 1.2;
+  border-bottom: 2px solid #374151;
+  padding-bottom: 0.5rem;
+}
+.note-editor .tiptap h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #f3f4f6;
+  margin: 1.25rem 0 0.5rem;
+}
+.note-editor .tiptap h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #e5e7eb;
+  margin: 1rem 0 0.4rem;
+}
+.note-editor .tiptap p {
+  color: #d1d5db;
+  line-height: 1.8;
+  margin-bottom: 0.75rem;
+}
+.note-editor .tiptap strong { color: #f9fafb; font-weight: 700; }
+.note-editor .tiptap em { color: #e5e7eb; font-style: italic; }
+
+.note-editor .tiptap ul,
+.note-editor .tiptap ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #d1d5db;
+}
+.note-editor .tiptap ul { list-style-type: disc; }
+.note-editor .tiptap ol { list-style-type: decimal; }
+.note-editor .tiptap li { margin-bottom: 0.25rem; line-height: 1.7; }
+
+.note-editor .tiptap blockquote {
+  border-left: 4px solid #eab308;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  background: #78350f20;
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: #fde68a;
+  font-style: italic;
+}
+.note-editor .tiptap hr {
+  border: none;
+  border-top: 1px solid #374151;
+  margin: 1.5rem 0;
+}
+.note-editor .tiptap img {
+  max-width: 100%;
+  border-radius: 0.75rem;
+  margin: 1rem 0;
+  border: 1px solid #374151;
+}
+.note-editor .tiptap a {
+  color: #facc15;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ── Article content display (same styles for reading) ───────── */
+.article-content h1 {
+  font-size: 1.75rem; font-weight: 900; color: #f9fafb;
+  margin: 1.5rem 0 0.75rem; border-bottom: 2px solid #374151; padding-bottom: 0.5rem;
+}
+.article-content h2 {
+  font-size: 1.35rem; font-weight: 800; color: #f3f4f6;
+  margin: 1.25rem 0 0.5rem;
+}
+.article-content h3 {
+  font-size: 1.1rem; font-weight: 700; color: #e5e7eb;
+  margin: 1rem 0 0.4rem;
+}
+.article-content p { color: #d1d5db; line-height: 1.8; margin-bottom: 0.75rem; }
+.article-content strong { color: #f9fafb; font-weight: 700; }
+.article-content em { color: #e5e7eb; font-style: italic; }
+.article-content ul, .article-content ol {
+  padding-left: 1.5rem; margin-bottom: 0.75rem; color: #d1d5db;
+}
+.article-content ul { list-style-type: disc; }
+.article-content ol { list-style-type: decimal; }
+.article-content li { margin-bottom: 0.25rem; line-height: 1.7; }
+.article-content blockquote {
+  border-left: 4px solid #eab308; padding: 0.5rem 1rem; margin: 1rem 0;
+  background: #78350f20; border-radius: 0 0.5rem 0.5rem 0;
+  color: #fde68a; font-style: italic;
+}
+.article-content hr { border: none; border-top: 1px solid #374151; margin: 1.5rem 0; }
+.article-content img {
+  max-width: 100%; border-radius: 0.75rem; margin: 1rem 0; border: 1px solid #374151;
+}
+.article-content a { color: #facc15; text-decoration: underline; text-underline-offset: 2px; }

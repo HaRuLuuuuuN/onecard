@@ -17,38 +17,26 @@ const categoryColors: Record<string, string> = {
   strategy: 'bg-purple-600/20 text-purple-400 border-purple-600/30',
 };
 
-function renderContent(content: string) {
+function isHtml(content: string) {
+  return /<[a-z][\s\S]*>/i.test(content);
+}
+
+// Legacy plain-text renderer (for old articles stored as plain text)
+function renderPlainContent(content: string) {
   const lines = content.split('\n');
   const result: React.ReactNode[] = [];
   let key = 0;
-
   for (const line of lines) {
     if (line.startsWith('## ')) {
-      result.push(
-        <h2 key={key++} className="text-2xl font-black text-white mt-8 mb-4">
-          {line.slice(3)}
-        </h2>
-      );
+      result.push(<h2 key={key++} className="text-2xl font-black text-white mt-8 mb-4">{line.slice(3)}</h2>);
     } else if (line.startsWith('### ')) {
-      result.push(
-        <h3 key={key++} className="text-lg font-bold text-white mt-6 mb-3">
-          {line.slice(4)}
-        </h3>
-      );
+      result.push(<h3 key={key++} className="text-lg font-bold text-white mt-6 mb-3">{line.slice(4)}</h3>);
     } else if (line.startsWith('- ')) {
-      result.push(
-        <li key={key++} className="text-gray-300 ml-4 mb-1">
-          {line.slice(2)}
-        </li>
-      );
+      result.push(<li key={key++} className="text-gray-300 ml-4 mb-1">{line.slice(2)}</li>);
     } else if (line.trim() === '') {
       result.push(<div key={key++} className="mb-2" />);
     } else {
-      result.push(
-        <p key={key++} className="text-gray-300 leading-relaxed mb-3">
-          {line}
-        </p>
-      );
+      result.push(<p key={key++} className="text-gray-300 leading-relaxed mb-3">{line}</p>);
     }
   }
   return result;
@@ -113,7 +101,11 @@ export default function ArticleDetailPage({ params }: Props) {
           <p className="text-yellow-300 font-medium text-sm">{article.summary}</p>
         </div>
 
-        <div className="prose-custom">{renderContent(article.content)}</div>
+        {isHtml(article.content) ? (
+          <div className="article-content" dangerouslySetInnerHTML={{ __html: article.content }} />
+        ) : (
+          <div className="article-content">{renderPlainContent(article.content)}</div>
+        )}
 
         <div className="flex flex-wrap gap-2 mt-8 pt-6 border-t border-gray-800">
           {article.tags.map((tag) => (

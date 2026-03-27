@@ -10,6 +10,7 @@ import {
   Plus, Trash2, Edit2, Save, X, RotateCcw, ExternalLink,
   BarChart2, BookOpen, Layers,
 } from 'lucide-react';
+import RichEditor from '@/components/RichEditor';
 
 // ─── shared helpers ───────────────────────────────────────────────────────────
 
@@ -307,9 +308,10 @@ function ArticleForm({ initial, onSave, onCancel }: {
   };
 
   return (
-    <div className="bg-gray-900 border border-yellow-600/40 rounded-xl p-4 space-y-3">
+    <div className="bg-gray-900 border border-yellow-600/40 rounded-xl p-4 space-y-4">
+      {/* Meta */}
       <Input label="タイトル" value={form.title} onChange={(v) => setForm({ ...form, title: v })} placeholder="記事タイトル" />
-      <div className="grid sm:grid-cols-3 gap-3">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div>
           <label className="text-gray-400 text-xs block mb-1">カテゴリ</label>
           <select value={form.category} onChange={(e) => handleCategory(e.target.value)}
@@ -318,13 +320,23 @@ function ArticleForm({ initial, onSave, onCancel }: {
           </select>
         </div>
         <Input label="著者" value={form.author} onChange={(v) => setForm({ ...form, author: v })} placeholder="ニックネーム" />
+        <Input label="公開日" value={form.publishedAt} onChange={(v) => setForm({ ...form, publishedAt: v })} placeholder="2026-03-27" />
         <Input label="読了時間（分）" value={form.readTime} onChange={(v) => setForm({ ...form, readTime: parseInt(v) || 0 })} type="number" />
       </div>
-      <Input label="公開日" value={form.publishedAt} onChange={(v) => setForm({ ...form, publishedAt: v })} placeholder="2026-03-27" />
-      <Textarea label="概要（サマリー）" value={form.summary} onChange={(v) => setForm({ ...form, summary: v })} rows={2} placeholder="記事の簡単な説明" />
-      <Textarea label="本文（Markdownライク: ## 見出し, - リスト）" value={form.content} onChange={(v) => setForm({ ...form, content: v })} rows={10} placeholder={`## はじめに\n\n記事本文をここに書きます。\n\n## 次のセクション\n\n- リスト項目1\n- リスト項目2`} />
+      <Textarea label="概要（サマリー）" value={form.summary} onChange={(v) => setForm({ ...form, summary: v })} rows={2} placeholder="記事の簡単な説明（一覧ページに表示されます）" />
       <Input label="タグ（カンマ区切り）" value={tagsInput} onChange={setTagsInput} placeholder="赤, ルフィ, アグロ" />
-      <div className="flex gap-2">
+
+      {/* Rich text editor */}
+      <div>
+        <label className="text-gray-400 text-xs block mb-1">本文</label>
+        <RichEditor
+          value={form.content}
+          onChange={(html) => setForm({ ...form, content: html })}
+          placeholder="本文を入力してください..."
+        />
+      </div>
+
+      <div className="flex gap-2 pt-1">
         <SaveBtn onClick={handleSave} disabled={!form.title.trim()} />
         <CancelBtn onClick={onCancel} />
       </div>
