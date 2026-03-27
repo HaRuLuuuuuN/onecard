@@ -1,23 +1,14 @@
 import Link from 'next/link';
-import { Database, Layers, BarChart2, BookOpen, TrendingUp, Zap, Shield } from 'lucide-react';
+import { Layers, BarChart2, BookOpen, TrendingUp, Zap, Shield } from 'lucide-react';
 import { articles, tierList } from '@/data/meta';
 import { sampleDecks } from '@/data/decks';
-import { cards } from '@/data/cards';
 
 const featureCards = [
   {
-    icon: Database,
-    title: 'カードデータベース',
-    description: '全カードの情報を検索・フィルタ。色、コスト、レアリティで絞り込み。',
-    href: '/cards',
-    color: 'text-blue-400',
-    bg: 'bg-blue-950/30 border-blue-800/50',
-  },
-  {
     icon: Layers,
-    title: 'デッキビルダー',
-    description: 'オリジナルデッキを作成・保存・共有。リーダーを選んで構築開始。',
-    href: '/deck-builder',
+    title: 'デッキ一覧',
+    description: '環境デッキのサンプルを一覧で閲覧。リーダー別に絞り込んで参考にしよう。',
+    href: '/decks',
     color: 'text-green-400',
     bg: 'bg-green-950/30 border-green-800/50',
   },
@@ -40,7 +31,6 @@ const featureCards = [
 ];
 
 const stats = [
-  { label: 'カード総数', value: String(cards.length) + '+', icon: Database },
   { label: 'サンプルデッキ', value: String(sampleDecks.length), icon: Layers },
   { label: 'Tierリスト収録', value: String(tierList.length), icon: TrendingUp },
   { label: '攻略記事', value: String(articles.length), icon: BookOpen },
@@ -66,22 +56,22 @@ export default function HomePage() {
             <span className="text-yellow-400">攻略サイト</span>
           </h1>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto mb-8">
-            カードDB・デッキビルダー・環境Tier・攻略記事を完備。
+            環境Tier・デッキ一覧・攻略記事を完備。
             <br />
             初心者から競技プレイヤーまで使える本格的な攻略情報を提供します。
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link
-              href="/cards"
+              href="/meta"
               className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-8 py-3 rounded-lg transition-colors"
             >
-              カードを検索する
+              環境Tierを見る
             </Link>
             <Link
-              href="/deck-builder"
+              href="/articles"
               className="bg-gray-800 hover:bg-gray-700 text-white font-bold px-8 py-3 rounded-lg border border-gray-700 transition-colors"
             >
-              デッキを作る
+              攻略記事を読む
             </Link>
           </div>
         </div>

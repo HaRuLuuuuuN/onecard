@@ -1,24 +1,30 @@
-import Link from 'next/link';
-import { Heart, Clock, Tag, PlusCircle } from 'lucide-react';
+import { Heart, Clock, Tag } from 'lucide-react';
 import { sampleDecks } from '@/data/decks';
-import { ColorDot } from '@/components/CardBadge';
-import { CardColor } from '@/types/card';
+
+const colorMap: Record<string, string> = {
+  Red: '#dc2626',
+  Blue: '#2563eb',
+  Purple: '#9333ea',
+  Black: '#374151',
+  Green: '#16a34a',
+  Yellow: '#ca8a04',
+};
+
+function ColorDot({ color }: { color: string }) {
+  return (
+    <span
+      className="inline-block w-3 h-3 rounded-full border border-white/20"
+      style={{ backgroundColor: colorMap[color] ?? '#374151' }}
+    />
+  );
+}
 
 export default function DecksPage() {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-black text-white">デッキ一覧</h1>
-          <p className="text-gray-400 mt-1">{sampleDecks.length} 件のデッキ</p>
-        </div>
-        <Link
-          href="/deck-builder"
-          className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black font-bold px-4 py-2 rounded-lg transition-colors text-sm"
-        >
-          <PlusCircle className="w-4 h-4" />
-          デッキを作る
-        </Link>
+      <div>
+        <h1 className="text-3xl font-black text-white">デッキ一覧</h1>
+        <p className="text-gray-400 mt-1">{sampleDecks.length} 件のデッキ</p>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -37,7 +43,7 @@ export default function DecksPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1 mb-1">
                   {deck.leader.color.map((c) => (
-                    <ColorDot key={c} color={c as CardColor} />
+                    <ColorDot key={c} color={c} />
                   ))}
                   <span className="text-gray-500 text-xs ml-1">リーダー</span>
                 </div>

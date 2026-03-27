@@ -8,9 +8,7 @@ import clsx from 'clsx';
 
 const navLinks = [
   { href: '/', label: 'ホーム' },
-  { href: '/cards', label: 'カードDB' },
   { href: '/decks', label: 'デッキ一覧' },
-  { href: '/deck-builder', label: 'デッキビルダー' },
   { href: '/meta', label: '環境/Tier' },
   { href: '/articles', label: '攻略記事' },
 ];
